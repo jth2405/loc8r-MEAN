@@ -1,3 +1,2 @@
-"# Loc8r-MEANproj" 
-"# Loc8r-MEANproj" 
-"# loc8r-MEAN" 
+모바일 앱개발 실습 페이지 개발입니다. 
+api-key는 비밀사항이므로 올리지 않았습니다. googleAPIKEY라는 곳이 있다면 반드시 자신의 구글 API를 이용해주세요!
