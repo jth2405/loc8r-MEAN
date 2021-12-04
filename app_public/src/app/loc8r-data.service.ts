@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { HttpClientModule } from '@angular/common/http';
 import { Location, Review } from './location';
+import { User } from './user';
+import { AuthResponse } from './authresponse';
+
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +46,24 @@ public addReviewByLocationId(locationId: string, formData: Review): Promise<Revi
     .toPromise()
     .then(response=>response as any)
     .catch(this.handleError);
+  }
+  
+
+  public login(user: User): Promise<AuthResponse> {
+    return this.makeAuthApiCall('login', user);
+  }
+
+  public register(user: User): Promise<AuthResponse> {
+    return this.makeAuthApiCall('register', user);
+  }
+
+  private makeAuthApiCall(urlPath: string, user: User):Promise<AuthResponse> {
+    const url: string = `${this.apiBaseUrl}/${urlPath}`;
+    return this.http
+      .post(url, user)
+      .toPromise()
+      .then(response => response as AuthResponse)
+      .catch(this.handleError);
   }
 }
 
