@@ -13,7 +13,7 @@ export class LocationDetailsComponent implements OnInit {
 
   @Input() location: Location;
 
-  public googleAPIKey=ApiKey.API_KEY;//API를 가져오는 
+  public googleAPIKey=ApiKey.API_KEY;
 
  
 

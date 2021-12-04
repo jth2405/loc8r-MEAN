@@ -1,5 +1,30 @@
 const mongoose=require('mongoose');
 const Loc=mongoose.model('Location');
+const User = mongoose.model('User');
+
+const getAuthor = (req, res, callback) => {
+  if (req.payload && req.payload.email) {
+    User
+      .findOne({ email : req.payload.email })
+      .exec((err, user) => {
+        if (!user) {
+          return res
+            .status(404)
+            .json({"message": "User not found"});
+        } else if (err) {
+          console.log(err);
+          return res
+            .status(404)
+            .json(err);
+         }
+        callback(req, res, user.name);
+       });
+  } else {
+    return res
+      .status(404)
+      .json({"message": "User not found"});
+  }
+};  //2017250045정태환
 
 const doSetAverageRating = (location) => {
     if (location.reviews && location.reviews.length > 0) {
@@ -27,9 +52,7 @@ const updateAverageRating = (locationId) => {
        });
 };
   
-  
-
-const doAddReview = (req, res, location) => {
+const doAddReview = (req, res, location, author) => {
     if (!location) {
       res
         .status(404)
@@ -59,6 +82,8 @@ const doAddReview = (req, res, location) => {
   
   
 const reviewsCreate = (req,res) => {
+  getAuthor(req,res, 
+    (req,res,userName) => {
     const locationid=req.params.locationid;
     if(locationid){
         Loc
@@ -70,7 +95,7 @@ const reviewsCreate = (req,res) => {
                     .status(400)
                     .json(err);
             } else{
-                doAddReview(req,res,location);
+                doAddReview(req,res,location,userName);
             }
 
         });
@@ -79,6 +104,7 @@ const reviewsCreate = (req,res) => {
             .status(404)
             .json({"message":"Location not found"});
     }
+  });
 };
 
 const reviewsReadOne  = (req,res) => {
