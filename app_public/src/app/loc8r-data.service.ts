@@ -38,8 +38,13 @@ export class Loc8rDataService {
   
   public addReviewByLocationId(locationId: string, formData: Review): Promise<Review>{
   const url: string= `${this.apiBaseUrl}/locations/${locationId}/reviews`;
+  const httpOptions={
+    headers: new HttpHeaders({
+      'Authorization': `Bearer ${this.storage.getItem('loc8r-token')}`
+    })
+  };
   return this.http
-    .post(url, formData)
+    .post(url, formData,httpOptions)
     .toPromise()
     .then(response=>response as any)
     .catch(this.handleError);
