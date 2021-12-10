@@ -28,15 +28,16 @@ app.use(passport.initialize());
 
 
 //app.use('/', indexRouter);
-app.use('/api', apiRouter);
 
 app.use('/api', (req, res, next) => {
-  res.header("Access-Control-Allow-Origin", '*');
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   next();
 });
 
-app.get(/(\/about)|(\/location\/[a-z0-9]{24})/, function(req, res, next) {
+app.use('/api', apiRouter);
+
+app.get(/(\/about)|(\/location\/[a-z0-9]{24})/, function(req, res) {
   res.sendFile(path.join(__dirname, 'app_public', 'build', 'index.html'));
 });
 

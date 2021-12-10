@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Location, Review } from './location';
 import { User } from './user';
 import { AuthResponse } from './authresponse';
+import { BROWSER_STORAGE } from './storage';
 
 
 @Injectable({
@@ -10,9 +11,12 @@ import { AuthResponse } from './authresponse';
 })
 export class Loc8rDataService {
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    @Inject(BROWSER_STORAGE)private storage: Storage) { }
 
-  private apiBaseUrl = 'https://loc8rjth.herokuapp.com/api'; //백엔드//
+  //private apiBaseUrl = 'https://loc8rjth.herokuapp.com/api'; //백엔드//
+  private apiBaseUrl = 'http://localhost:3000/api'
 
   public getLocations(lat:number, lng:number): Promise<Location[]> {
     const maxDistance: number = 20000;
@@ -32,14 +36,7 @@ export class Loc8rDataService {
       .catch(this.handleError);
   }
   
-  
-
-private handleError(error: any): Promise<any> {
-  console.error('Something has gone wrong', error);
-  return Promise.reject(error.message || error);
-}
-
-public addReviewByLocationId(locationId: string, formData: Review): Promise<Review>{
+  public addReviewByLocationId(locationId: string, formData: Review): Promise<Review>{
   const url: string= `${this.apiBaseUrl}/locations/${locationId}/reviews`;
   return this.http
     .post(url, formData)
@@ -48,6 +45,10 @@ public addReviewByLocationId(locationId: string, formData: Review): Promise<Revi
     .catch(this.handleError);
   }
   
+  private handleError(error: any): Promise<any> {
+    console.error('Something has gone wrong', error);
+    return Promise.reject(error.message || error);
+  }
 
   public login(user: User): Promise<AuthResponse> {
     return this.makeAuthApiCall('login', user);
